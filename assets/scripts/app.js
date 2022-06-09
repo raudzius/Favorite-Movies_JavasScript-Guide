@@ -51,22 +51,31 @@ function renderNewMovie(id, title, imageUrl, rating) {
   <p>${rating}/5 stars</p>
   </div>
   `;
-  newMovieElement.addEventListener(
-    'click',
-    (() => {
-      deleteMovieModal.classList.add('visible');
-      toggleBackdrop();
-      let movieIndex = 0;
-      for (const movie of movies) {
-        if (movie.id === id) {
-          break;
+  newMovieElement.addEventListener('click', () => {
+    deleteMovieModal.classList.add('visible');
+    toggleBackdrop();
+    const cancelDeletionBtn = deleteMovieModal.querySelector('.btn--passive');
+    const confirmDeletionBtn = deleteMovieModal.querySelector('.btn--danger');
+
+    cancelDeletionBtn.addEventListener('click', () => {
+      closeMovieDeletionModal();
+    });
+    confirmDeletionBtn.addEventListener(
+      'click',
+      (() => {
+        let movieIndex = 0;
+        for (const movie of movies) {
+          if (movie.id === id) {
+            break;
+          }
+          movieIndex++;
         }
-        movieIndex++;
-      }
-      // movies.splice(movieIndex, 1);
-      // listRoot.children[movieIndex].remove();
-    }).bind(null, id)
-  );
+        movies.splice(movieIndex, 1);
+        listRoot.children[movieIndex].remove();
+        closeMovieDeletionModal();
+      }).bind(null, id)
+    );
+  });
   listRoot.append(newMovieElement);
 }
 
